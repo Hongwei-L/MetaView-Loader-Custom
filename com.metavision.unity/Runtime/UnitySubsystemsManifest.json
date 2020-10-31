@@ -1,0 +1,18 @@
+{
+  "name": "XRSDKMetaView",
+  "version": "0.1",
+  "libraryName": "XRSDKMetaView",
+
+  "displays": [
+    {
+      "id": "Meta View Display"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "Meta View Headset Input",
+      "disablesLegacyInput": true,
+      "disablesLegacyVr" : true
+    }
+  ]
+}

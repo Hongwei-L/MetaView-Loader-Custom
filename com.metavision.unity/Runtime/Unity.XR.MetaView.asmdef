@@ -1,0 +1,37 @@
+{
+    "name": "Unity.XR.MetaView",
+    "references": [
+        "Unity.XR.Management",
+        "UnityEngine.InputSystem"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WSA",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "",
+            "define": "UNITY_INPUT_SYSTEM"
+        },
+        {
+            "name": "com.unity.xr.management",
+            "expression": "",
+            "define": "UNITY_XR_MANAGEMENT"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "10.0",
+            "define": "UNITY_URP_10PLUS"
+        }
+    ],
+    "noEngineReferences": false
+}

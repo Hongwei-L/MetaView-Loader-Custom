@@ -1,0 +1,24 @@
+{
+    "name": "com.metavision.unity",
+    "displayName": "Meta View XR Plugin",
+    "version": "1.1.1",
+    "unity": "2019.3",
+    "description": "Provides rendering support for Meta View devices in Unity XR.",
+    "keywords": [
+        "xr",
+        "xreditorsubsystem",
+        "xrsdk",
+        "unity",
+        "sdk"
+    ],
+    "dependencies": {
+        "com.unity.xr.management": "3.2.15",
+        "com.unity.ugui": "1.0.0",
+        "com.unity.xr.legacyinputhelpers": "2.1.4",
+        "com.unity.modules.vr": "1.0.0",
+        "com.unity.modules.xr": "1.0.0"
+    },
+    "author": "Meta View, Inc.",
+    "hideInEditor": false,
+    "license": "Proprietary"
+}
