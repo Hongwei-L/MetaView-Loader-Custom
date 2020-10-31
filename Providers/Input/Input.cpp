@@ -35,6 +35,10 @@ int MetaViewInputProvider::trackerFeatureIndices[static_cast<int>(
 
 const static unsigned int kHapticsNumChannels = 1;
 
+// Han Custom Code
+// this IPD can be changed in runtime.
+static float SinglePassInstancedCamIPD = NominalIpd;
+
 static UnitySubsystemErrorCode UNITY_INTERFACE_API
 Tick(UnitySubsystemHandle handle, void *userData,
      UnityXRInputUpdateType updateType) {
@@ -648,9 +652,9 @@ static inline UnityXRMatrix4x4 GetEyeTransformReal(EEye eye) {
     if (eye == EEye::CenterOrBoth) return XRMatrix4x4::identity;
     switch (eye) {
         case EEye::Left:
-            return MakeTranslation(NominalIpd / -2.f, 0, 0);
+            return MakeTranslation(SinglePassInstancedCamIPD / -2.f, 0, 0);
         case EEye::Right:
-            return MakeTranslation(NominalIpd / 2.f, 0, 0);
+            return MakeTranslation(SinglePassInstancedCamIPD / 2.f, 0, 0);
         case EEye::CenterOrBoth:
         default:
             return XRMatrix4x4::identity;
@@ -1206,4 +1210,12 @@ bool RegisterInputLifecycleProvider(
                                        &inputLifecycleHandler);
 
     return true;
+}
+
+
+//Han Custom Code
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
+SetParamsForSinglePassInstancedCameraInputCPP(float IPD) {
+    SinglePassInstancedCamIPD = IPD;
 }

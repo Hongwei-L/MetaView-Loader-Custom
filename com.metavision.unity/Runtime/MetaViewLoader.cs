@@ -347,6 +347,14 @@ namespace Unity.XR.MetaView
             return true;
         }
 
+        public bool SetupForSinglePassInstancedCamera(float IPD)
+        {
+            SetParamsForSinglePassInstancedCameraInputCPP(IPD);
+            SetParamsForSinglePassInstancedCameraDisplayCPP(IPD);
+            Debug.Log($"{PluginMetadata.DebugLogPrefix}Sent single pass instanced camera parameters to native plugin.");
+            return true;
+        }
+
         private static void CleanupTick()
         {
             RegisterTickCallback(null);
@@ -371,6 +379,13 @@ namespace Unity.XR.MetaView
 
         [DllImport(PluginMetadata.PluginDllName, CharSet = CharSet.Auto)]
         private static extern void SetProjectionParamsForSingleCamera(float left, float right, float top, float bottom);
+
+        [DllImport(PluginMetadata.PluginDllName, CharSet = CharSet.Auto)]
+        private static extern void SetParamsForSinglePassInstancedCameraInputCPP(float IPD);
+
+        [DllImport(PluginMetadata.PluginDllName, CharSet = CharSet.Auto)]
+        private static extern void SetParamsForSinglePassInstancedCameraDisplayCPP(float IPD);
+
         [DllImport(PluginMetadata.PluginDllName, CharSet = CharSet.Auto)]
         static extern void RegisterTickCallback([MarshalAs(UnmanagedType.FunctionPtr)] TickCallbackDelegate callbackPointer);
 

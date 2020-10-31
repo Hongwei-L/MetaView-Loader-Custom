@@ -60,6 +60,12 @@ static IUnityXRStats *s_pXRStats;
 static UnitySubsystemHandle s_DisplayHandle;
 static OpenVRProviderContext *s_pProviderContext;
 
+
+// Han Custom Code
+
+// this IPD can be changed in runtime.
+static float SinglePassInstancedCamIPD = NominalIpd;
+
 // XR Stats
 static UnityXRStatId m_nNumDroppedFrames;  // number of additional times
                                            // previous frame was scanned out
@@ -155,7 +161,6 @@ SetProjectionParamsForSingleCamera(float left, float right, float top,
     SingleCamFov.top = top;
     SingleCamFov.bottom = bottom;
 }
-
 
 // Callback executed when a subsystem should initialize in preparation for
 // becoming active.
@@ -1046,7 +1051,8 @@ UnityXRPose OpenVRDisplayProvider::GetEyePose(EEye eye) {
     // this actually wants eye to head, I think.
     XRVector3 pos{0, 0, -NominalHeadToEye};
     if (eye != EEye::CenterOrBoth) {
-        pos.x = (eye == EEye::Left) ? NominalIpd / - 2.f : NominalIpd / 2.f;
+        pos.x = (eye == EEye::Left) ? SinglePassInstancedCamIPD / -2.f
+                                    : SinglePassInstancedCamIPD / 2.f;
     }
     ret.position = pos;
 
@@ -1247,7 +1253,7 @@ static inline float computeEyePullback(float ipd, float vertFovRadians,
 void OpenVRDisplayProvider::SetupCullingPass(
     EEye eye, const UnityXRFrameSetupHints *frameHints,
     UnityXRNextFrameDesc::UnityXRCullingPass &cullingPass) {
-    cullingPass.separation = NominalIpd;
+    cullingPass.separation = SinglePassInstancedCamIPD;
 
     UnityXRPose pose = GetEyePose(eye);
     float eyePullback = 0.f;
@@ -1471,4 +1477,12 @@ bool RegisterDisplayLifecycleProvider(
     }
 
     return true;
+}
+
+
+//Han Custom Code
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
+SetParamsForSinglePassInstancedCameraDisplayCPP(float IPD) {
+    SinglePassInstancedCamIPD = IPD;
 }
