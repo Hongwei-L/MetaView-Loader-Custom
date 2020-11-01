@@ -347,10 +347,11 @@ namespace Unity.XR.MetaView
             return true;
         }
 
-        public bool SetupForSinglePassInstancedCamera(float IPD, float widthHalfAngle, float heightHalfAngle)
+        public bool SetupForSinglePassInstancedCamera(float IPD, float widthHalfAngle, float heightHalfAngle, float leftEyeX, float rightEyeX, float leftEyeY, float rightEyeY, float leftEyeZ, float rightEyeZ)
         {
             SetParamsForSinglePassInstancedCameraInputCPP(IPD);
-            SetParamsForSinglePassInstancedCameraDisplayCPP(IPD);
+            //SetParamsForSinglePassInstancedCameraDisplayCPP(IPD);
+            SetParamsForSinglePassInstancedCameraPos(leftEyeX, rightEyeX, leftEyeY, rightEyeY, leftEyeZ, rightEyeZ);
             SetParamsForSinglePassInstancedCameraFOV(widthHalfAngle, heightHalfAngle);
             Debug.Log($"{PluginMetadata.DebugLogPrefix}Sent single pass instanced camera parameters to native plugin.");
             return true;
@@ -386,6 +387,9 @@ namespace Unity.XR.MetaView
 
         [DllImport(PluginMetadata.PluginDllName, CharSet = CharSet.Auto)]
         private static extern void SetParamsForSinglePassInstancedCameraDisplayCPP(float IPD);
+
+        [DllImport(PluginMetadata.PluginDllName, CharSet = CharSet.Auto)]
+        private static extern void SetParamsForSinglePassInstancedCameraPos(float leftEyeX, float rightEyeX, float leftEyeY, float rightEyeY, float leftEyeZ, float rightEyeZ);
 
         [DllImport(PluginMetadata.PluginDllName, CharSet = CharSet.Auto)]
         private static extern void SetParamsForSinglePassInstancedCameraFOV(float widthHalfAngle, float heightHalfAngle);

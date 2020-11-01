@@ -64,6 +64,18 @@ static OpenVRProviderContext *s_pProviderContext;
 // this IPD can be changed in runtime.
 static float SinglePassInstancedCamIPD = NominalIpd;
 
+static float LeftEyeX = -0.0315f;
+
+static float RightEyeX = 0.0315f;
+
+static float LeftEyeY = 0;
+
+static float RightEyeY = 0;
+
+static float LeftEyeZ = 0;
+
+static float RightEyeZ = 0;
+
 static UnityXRProjectionHalfAngles LeftFovRuntime = LeftFov;
 
 static UnityXRProjectionHalfAngles RightFovRuntime = RightFov;
@@ -1053,8 +1065,11 @@ UnityXRPose OpenVRDisplayProvider::GetEyePose(EEye eye) {
     // this actually wants eye to head, I think.
     XRVector3 pos{0, 0, -NominalHeadToEye};
     if (eye != EEye::CenterOrBoth) {
-        pos.x = (eye == EEye::Left) ? SinglePassInstancedCamIPD / -2.f
-                                    : SinglePassInstancedCamIPD / 2.f;
+        pos.x = (eye == EEye::Left) ? LeftEyeX : RightEyeX;
+
+        pos.y = (eye == EEye::Left) ? -LeftEyeY : -RightEyeY;
+
+        pos.z = (eye == EEye::Left) ? -LeftEyeZ : -RightEyeZ;
     }
     ret.position = pos;
 
@@ -1255,7 +1270,7 @@ static inline float computeEyePullback(float ipd, float vertFovRadians,
 void OpenVRDisplayProvider::SetupCullingPass(
     EEye eye, const UnityXRFrameSetupHints *frameHints,
     UnityXRNextFrameDesc::UnityXRCullingPass &cullingPass) {
-    cullingPass.separation = SinglePassInstancedCamIPD;
+    cullingPass.separation = -LeftEyeX + RightEyeX;
 
     UnityXRPose pose = GetEyePose(eye);
     float eyePullback = 0.f;
@@ -1486,6 +1501,18 @@ bool RegisterDisplayLifecycleProvider(
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
 SetParamsForSinglePassInstancedCameraDisplayCPP(float IPD) {
     SinglePassInstancedCamIPD = IPD;
+}
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
+SetParamsForSinglePassInstancedCameraPos(float leftEyeX, float rightEyeX,
+    float leftEyeY, float rightEyeY,
+    float leftEyeZ, float rightEyeZ) {
+    LeftEyeX = leftEyeX;
+    RightEyeX = rightEyeX;
+    LeftEyeY = leftEyeY;
+    RightEyeY = rightEyeY;
+    LeftEyeZ = leftEyeZ;
+    RightEyeZ = rightEyeZ;
 }
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
