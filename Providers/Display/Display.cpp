@@ -60,11 +60,13 @@ static IUnityXRStats *s_pXRStats;
 static UnitySubsystemHandle s_DisplayHandle;
 static OpenVRProviderContext *s_pProviderContext;
 
-
 // Han Custom Code
-
 // this IPD can be changed in runtime.
 static float SinglePassInstancedCamIPD = NominalIpd;
+
+static UnityXRProjectionHalfAngles LeftFovRuntime = LeftFov;
+
+static UnityXRProjectionHalfAngles RightFovRuntime = RightFov;
 
 // XR Stats
 static UnityXRStatId m_nNumDroppedFrames;  // number of additional times
@@ -1216,22 +1218,22 @@ UnityXRProjection OpenVRDisplayProvider::GetProjection(EEye eye, float flNear,
         if (eye == EEye::CenterOrBoth) {
             // Calculate combined left + right eye combined projection
             // Use the max extent's for each eye
-            vrL = LeftFov.left;
-            vrR = RightFov.right;
-            vrT = RightFov.top;
-            vrB = LeftFov.bottom;
+            vrL = LeftFovRuntime.left;
+            vrR = RightFovRuntime.right;
+            vrT = RightFovRuntime.top;
+            vrB = LeftFovRuntime.bottom;
 
         } else if (eye == EEye::Left) {
-            vrL = LeftFov.left;
-            vrR = LeftFov.right;
-            vrT = LeftFov.top;
-            vrB = LeftFov.bottom;
+            vrL = LeftFovRuntime.left;
+            vrR = LeftFovRuntime.right;
+            vrT = LeftFovRuntime.top;
+            vrB = LeftFovRuntime.bottom;
 
         } else {
-            vrL = RightFov.left;
-            vrR = RightFov.right;
-            vrT = RightFov.top;
-            vrB = RightFov.bottom;
+            vrL = RightFovRuntime.left;
+            vrR = RightFovRuntime.right;
+            vrT = RightFovRuntime.top;
+            vrB = RightFovRuntime.bottom;
         }
 
 #ifndef NDEBUG
@@ -1481,8 +1483,13 @@ bool RegisterDisplayLifecycleProvider(
 
 
 //Han Custom Code
-
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
 SetParamsForSinglePassInstancedCameraDisplayCPP(float IPD) {
     SinglePassInstancedCamIPD = IPD;
+}
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
+SetParamsForSinglePassInstancedCameraFOV(float widthHalfAngle, float heightHalfAngle) {
+    LeftFovRuntime = {-widthHalfAngle, widthHalfAngle, heightHalfAngle, -heightHalfAngle};
+    RightFovRuntime = {-widthHalfAngle, widthHalfAngle, heightHalfAngle, -heightHalfAngle};
 }
